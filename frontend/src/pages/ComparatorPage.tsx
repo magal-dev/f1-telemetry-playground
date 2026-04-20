@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { compareDrivers, type CompareResponse } from "../api/client";
+import { MOCK_RESPONSE } from "../api/mockData";
 import { CompareForm } from "../components/CompareForm";
 import { SpeedChart, DeltaChart, RPMChart, ThrottleChart } from "../components/TelemetryCharts";
 import { StatCards } from "../components/StatCards";
@@ -19,6 +20,12 @@ export function ComparatorPage() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<CompareResponse | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>("speed");
+
+  function loadDemo() {
+    setError(null);
+    setResult(MOCK_RESPONSE);
+    setActiveTab("speed");
+  }
 
   async function handleCompare(year: number, race: string, d1: string, d2: string) {
     setLoading(true);
@@ -40,8 +47,19 @@ export function ComparatorPage() {
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] pb-8">
+      {/* Demo banner */}
+      <div className="mx-4 mt-4 flex items-center justify-between bg-[#111] border border-[#2a2a2a] rounded-xl px-4 py-2.5">
+        <p className="text-[10px] text-[#555] uppercase tracking-widest">No backend? Try demo mode</p>
+        <button
+          onClick={loadDemo}
+          className="text-[10px] font-bold tracking-widest uppercase text-[#e10600] border border-[#e10600]/40 px-3 py-1 rounded-lg active:scale-95 transition-all"
+        >
+          Load Demo
+        </button>
+      </div>
+
       {/* Session selector */}
-      <div className="px-4 pt-4">
+      <div className="px-4 pt-3">
         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4">
           <CompareForm onSubmit={handleCompare} loading={loading} />
         </div>
